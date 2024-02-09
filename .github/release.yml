@@ -1,0 +1,15 @@
+changelog:
+  exclude:
+    labels:
+      - type:Task
+      - type:Release
+  categories:
+    - title: Feature
+      labels:
+        - type:Feature
+    - title: Bugfix
+      labels:
+        - type:Bugfix
+    - title: Other Changes
+      labels:
+        - "*"
