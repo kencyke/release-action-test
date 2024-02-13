@@ -13,6 +13,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    if: github.event.pull_request.merged == true
     steps:
       - name: Check out repository code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -26,7 +27,7 @@ jobs:
           fi
       - name: Push tag
         uses: mathieudutour/github-tag-action@fcfbdceb3093f6d85a3b194740f8c6cec632f4e2 # v6.1
-        if: github.event.pull_request.merged == true && steps.extract_tag_name.outputs.tag_name != ''
+        if: steps.extract_tag_name.outputs.tag_name != ''
         id: push_tag
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -35,15 +36,15 @@ jobs:
       - name: Create release
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         id: create_release
-        if: ${{ success() }} && steps.push_tag.outcome == 'success'
+        if: steps.push_tag.outputs.new_tag != ''
         with:
           tag: ${{ steps.push_tag.outputs.new_tag }}
           name: ${{ steps.push_tag.outputs.new_tag }}
           generateReleaseNotes: true
-      - name: Decide a branch name
+      - name: Decide a branch name created from develop to merge main
         id: decide_branch
         run: |
-          branch=main-to-develop-${{ github.event.pull_request.head.sha }}
+          branch=main-back-to-develop-${{ github.event.pull_request.head.sha }}
           echo "branch=${branch}" >> "$GITHUB_OUTPUT"
       - name: Create PR from a branch created from develop and merged main to develop branch
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
@@ -78,7 +79,7 @@ jobs:
               repo,
               base: branch,
               head: mainBranch,
-              commit_message: `Back merge #${number} to ${devBranch} branch}`,
+              commit_message: `Back merge #${number} to ${devBranch} branch`,
             })
 
             // create a pull request
