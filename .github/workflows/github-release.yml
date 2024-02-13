@@ -87,7 +87,7 @@ jobs:
               repo,
               base: devBranch,
               head: branch,
-              title: `Merge hotfix to ${devBranch}: ${title}`,
+              title: `Merge main to ${devBranch}: ${title}`,
               body: `Merge #${number} for ${devBranch} branch, too`,
             })
 
