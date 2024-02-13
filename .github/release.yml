@@ -5,7 +5,7 @@ changelog:
         - type:Feature
     - title: Bugfix
       labels:
-        - type:Bugfix
+        - [type:Bugfix, type:Hotfix]
     - title: Other Changes
       labels:
         - "type:Task"
