@@ -14,8 +14,8 @@ jobs:
         env:
           LABELS: ${{ toJson(github.event.pull_request.labels.*.name) }}
         run: |
-          has_required_label=$(echo "$LABELS" | jq 'map(select(. | contains("type:Release"))) | length')
-          if [[ $has_required_label -ne 1 ]]; then
+          required_labels_length=$(echo "${LABELS}" | jq 'map(select(. | contains("type:Release"))) | length')
+          if [[ ${required_labels_length} -ne 1 ]]; then
             echo "Pull request must have the following label: type:Release."
             exit 1
           fi    
