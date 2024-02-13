@@ -6,6 +6,7 @@ changelog:
     - title: Bugfix
       labels:
         - type:Bugfix
+        - type:Hotfix
     - title: Other Changes
       labels:
         - "type:Task"
