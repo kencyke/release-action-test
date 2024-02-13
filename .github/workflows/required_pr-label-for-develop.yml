@@ -1,0 +1,21 @@
+name: Required PR Labels for Develop
+
+on:
+  pull_request:
+    branches:
+      - develop
+    types: [opened, synchronize, reopened, labeled, unlabeled, review_requested, ready_for_review]
+
+jobs:
+  label:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check required labels
+        env:
+          LABELS: ${{ toJson(github.event.pull_request.labels.*.name) }}
+        run: |
+          has_required_label=$(echo "$LABELS" | jq 'map(select(. | contains("type:Feature") or contains("type:Bugfix") or contains("type:Task"))) | length')
+          if [[ $has_required_label -ne 1 ]]; then
+            echo "Pull request must have one of the following labels: type:Feature, type:Bugfix, type:Task."
+            exit 1
+          fi    
