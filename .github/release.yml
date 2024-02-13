@@ -1,7 +1,4 @@
 changelog:
-  exclude:
-    labels:
-      - type:Release
   categories:
     - title: Feature
       labels:
@@ -11,4 +8,4 @@ changelog:
         - type:Bugfix
     - title: Other Changes
       labels:
-        - "*"
+        - "type:Task"

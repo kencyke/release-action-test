@@ -41,11 +41,11 @@ jobs:
           name: ${{ steps.push_tag.outputs.new_tag }}
           generateReleaseNotes: true
       - name: Decide a branch name
-        id: decide-branch
+        id: decide_branch
         run: |
-          branch=main-to-develop/${{ github.event.pull_request.head.sha }}
+          branch=main-to-develop-${{ github.event.pull_request.head.sha }}
           echo "branch=${branch}" >> "$GITHUB_OUTPUT"
-      - name: Create a pull request
+      - name: Create PR from a branch created from develop and merged main to develop branch
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
@@ -61,7 +61,7 @@ jobs:
             })
 
             // create a new branch
-            const branch = "${{ steps.decide-branch.outputs.branch }}"
+            const branch = "${{ steps.decide_branch.outputs.branch }}"
             await github.rest.git.createRef({
               owner,
               repo,
@@ -78,7 +78,7 @@ jobs:
               repo,
               base: branch,
               head: mainBranch,
-              commit_message: `Merge ${title}`,
+              commit_message: `Back merge #${number} to ${devBranch} branch}`,
             })
 
             // create a pull request
@@ -87,8 +87,8 @@ jobs:
               repo,
               base: devBranch,
               head: branch,
-              title: `Merge main to ${devBranch}: ${title}`,
-              body: `Merge #${number} for ${devBranch} branch, too`,
+              title: `[${title}] Merge ${mainBranch} to ${devBranch}`,
+              body: `Back merge #${number} to ${devBranch} branch`,
             })
 
             // assign an actor as reviewer
