@@ -19,8 +19,10 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Extract tag name
         id: extract_tag_name
+        env:
+          RELEASE_BRANCH_NAME: ${{ github.head_ref }}
         run: |
-          if [[ ${{ github.head_ref }} =~ release\/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+          if [[ "${RELEASE_BRANCH_NAME}" =~ release\/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
             echo "tag_name=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
           else
             echo "No semantic version found in branch name."
